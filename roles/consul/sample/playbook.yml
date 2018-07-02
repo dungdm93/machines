@@ -1,0 +1,11 @@
+---
+- hosts: consul
+  become: yes
+  roles:
+  - role: consul
+    vars:
+      consul_configs:
+        encrypt: "3S9AfY8mIuPvXkAiJbAFvQ=="
+        server: true
+        ui: true
+        data_dir: /var/lib/consul

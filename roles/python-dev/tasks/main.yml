@@ -1,0 +1,14 @@
+---
+- name: Install Python packages
+  apt:
+    update_cache: yes
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - python-pip
+  - virtualenv
+
+- name: Upgrade pip
+  pip:
+    name:  pip
+    state: latest

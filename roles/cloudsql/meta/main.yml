@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: dungdm93
+  company: Teko, Inc.
+  description: Google CloudSQL Proxy
+  license: MIT
+  platforms:
+  - name: Linux
+    versions:
+    - all
+  categories:
+  - cloud
+  - database
+
+dependencies: []

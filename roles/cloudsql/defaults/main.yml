@@ -1,0 +1,2 @@
+cloud_sql_proxy_version:  linux.amd64
+cloud_sql_proxy_location: /usr/local/bin/cloud_sql_proxy

@@ -1,0 +1,14 @@
+[Unit]
+Description=Google CloudSQL Proxy
+Documentation=https://cloud.google.com/sql/
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+Environment=TCP_PORT={{cloud_sql_tcp_port | mandatory}}
+Environment=INSTANCE_CONNECTION_NAME={{cloud_sql_instance_name | mandatory}}
+ExecStart=/usr/local/bin/cloud_sql_proxy -instances=${INSTANCE_CONNECTION_NAME}=tcp:${TCP_PORT}
+
+[Install]
+WantedBy=multi-user.target

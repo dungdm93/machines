@@ -1,0 +1,6 @@
+---
+- name: Restart CloudSQL service
+  service:
+    name:  cloud-sql
+    state: restarted
+  listen: restart_cloud_sql

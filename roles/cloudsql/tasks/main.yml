@@ -1,0 +1,21 @@
+---
+- name: Download the proxy
+  get_url:
+    url:  https://dl.google.com/cloudsql/cloud_sql_proxy.{{cloud_sql_proxy_version}}
+    dest: "{{cloud_sql_proxy_location}}"
+    mode: +x
+
+- name: Setup CloudSQL proxy service
+  block:
+    - name: Copy service file
+      template:
+        src:  templates/cloud-sql.service
+        dest: /etc/systemd/system/cloud-sql.service
+      notify: restart_cloud_sql
+
+    - name: Start systemd service
+      systemd:
+        name: cloud-sql
+        daemon_reload: yes
+        enabled: yes
+        state: started

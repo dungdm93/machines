@@ -1,0 +1,9 @@
+---
+- hosts: sonar-server
+  become: yes
+  roles:
+  - role: cloudsql
+  - role: sonarqube
+    vars:
+      sonarqube_version: 7.1
+  - role: nginx

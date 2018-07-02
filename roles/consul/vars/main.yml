@@ -1,0 +1,7 @@
+# https://www.consul.io/docs/agent/options.html#configuration-files
+consul_configs_default:
+  data_dir: /var/lib/consul
+  # client_addr: "0.0.0.0"
+  # bind_addr: "0.0.0.0"
+  # server: true
+  # ui: true

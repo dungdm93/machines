@@ -1,0 +1,6 @@
+---
+- name: Relaod Consul service
+  service:
+    name:  consul
+    state: reloaded
+  listen: reload_consul

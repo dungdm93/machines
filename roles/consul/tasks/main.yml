@@ -1,0 +1,48 @@
+---
+- name: Install helper packages
+  package:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - zip
+  - unzip
+
+- name: Download Consul package
+  unarchive:
+    src:  https://releases.hashicorp.com/consul/{{consul_version}}/consul_{{consul_version}}_linux_amd64.zip
+    dest: /usr/local/sbin/
+    remote_src: yes
+
+- name: Update Consul default config
+  set_fact:
+    consul_configs: "{{consul_configs_default | combine(consul_configs)}}"
+
+- name: Create directories
+  file:
+    path:    "{{item}}"
+    state:   directory
+    recurse: yes
+  with_items:
+  - "/etc/consul.d"
+  - "{{consul_configs.data_dir}}"
+
+- name: Configs consul agent
+  copy:
+    content: "{{ consul_configs | to_nice_json }}" #TODO indent=2
+    dest:    /etc/consul.d/server.json
+    force:   yes
+
+# See: https://gist.github.com/yunano/c27eb679a29ab70178ca
+- name: Copy Consul systemd service
+  copy:
+    src:  files/consul.service
+    dest: /etc/systemd/system/consul.service
+    owner: root
+    group: root
+    mode:  u=rw,g=r,o=r #0644
+
+- name: Start service Consul n' enable start on boot
+  service:
+    name:    consul
+    state:   started
+    enabled: yes

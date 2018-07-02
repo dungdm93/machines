@@ -1,0 +1,41 @@
+---
+- name: Install MySQL-python package
+  package:
+    name:  "{{mysql_python_package}}"
+    state: present
+
+# Setup MySQL root password
+#
+# On Debian and RedHat with MySQL <= 5.6, login via:
+#   $ sudo mysql -u root
+# Securing the MySQL Installation
+# https://dev.mysql.com/doc/refman/5.6/en/linux-installation-yum-repo.html#yum-repo-securing-mysql-installation
+#   $ mysql_secure_installation
+#
+# MySQL 5.7+ on RedHat, temporary password is auto generated.
+# https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html#yum-repo-starting-and-stopping-server
+# To reveal it, use the following command:
+#   $ sudo grep 'temporary password' /var/log/mysqld.log
+
+- name: Catch temporary password
+  when: ansible_os_family == 'RedHat' and
+        mysql_version is version('5.7', '>=') and
+        ((mysql_new_installation is changed) or (mysql_catch_temporary_password | default(false)))
+  block:
+  - command: >
+      awk -F : '/temporary password/ {gsub(/ /, "", $NF); print $NF}' /var/log/mysql/error.log
+    register: temporary_password
+
+  - set_fact:
+      mysql_old_password: "{{ temporary_password.stdout }}"
+
+# TODO: error
+- name: Change MySQL root password
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_user:     "root"
+    login_password: "{{ mysql_old_password | default() }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    check_implicit_admin: true
+  when: (mysql_new_installation is changed) or (mysql_old_password is defined)

@@ -1,0 +1,22 @@
+# Documentations:
+# https://dev.mysql.com/doc/refman/en/linux-installation-yum-repo.html
+# https://dev.mysql.com/doc/mysql-yum-repo-quick-guide/en/
+---
+# Alternative: https://dev.mysql.com/doc/refman/en/verifying-package-integrity.html
+- name: Download MySQL GPG Public key
+  get_url:
+    url:  http://repo.mysql.com/RPM-GPG-KEY-mysql
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+    mode: 600
+
+- name: Add MySQL Yum repository
+  template:
+    src:  templates/mysql_yum.repo
+    dest: /etc/yum.repos.d/mysql.repo
+
+- name: Install mysql-server package
+  yum:
+    name:  mysql-server
+    state: present
+    update_cache: yes
+  register: mysql_new_installation

@@ -1,0 +1,29 @@
+# Documentations:
+# https://dev.mysql.com/doc/refman/en/linux-installation-apt-repo.html
+# https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/
+---
+- name: Install missing packages
+  package:
+    name: "{{item}}"
+  with_items:
+  - dirmngr
+
+- name: Add MySQL GPG Public key
+  apt_key:
+    id: 5072E1F5
+    keyserver: pgp.mit.edu
+    state: present
+
+- name: Add MySQL APT repository
+  template:
+    src:  templates/mysql_apt.list
+    dest: /etc/apt/sources.list.d/mysql.list
+
+- name: Install mysql-server package
+  apt:
+    name:  mysql-server
+    state: present
+    update_cache: yes
+  environment:
+    RUNLEVLEL: 1  # avoid starting service immediately
+  register: mysql_new_installation

@@ -1,0 +1,53 @@
+# https://dev.mysql.com/doc/refman/en/mysqld.html
+# The mysqld program has many options that can be specified at startup.
+# For a complete list of options, run this command:
+# $ mysqld --verbose --help
+# To see what values a running MySQL server is using, type instead
+# $ mysqladmin --user=root --password=secret variables
+# --or--
+# > SHOW [GLOBAL | SESSION] VARIABLES
+#        [LIKE 'pattern' | WHERE expr]
+---
+- name: Remove old configs
+  file:
+    path:   "{{item}}"
+    state:  absent
+  with_items:
+    - /etc/mysql
+    - "{{mysql_config_file}}"
+    - "{{mysql_config_include_dir}}"
+
+- name: Verify mysql include directory exists.
+  file:
+    path: "{{ mysql_config_include_dir }}"
+    state: directory
+
+- name: Copy my.cnf global MySQL configuration.
+  template:
+    src:  my.cnf
+    dest: "{{ mysql_config_file }}"
+  notify: restart_mysql
+
+- name: Copy my.cnf override files into include directory.
+  template:
+    src:  "{{ item }}"
+    dest: "{{ mysql_config_include_dir }}"
+  with_fileglob:
+  - templates/conf.d/*
+  notify: restart_mysql
+
+- name: Ensure MySQL log directory exists.
+  file:
+    path:  /var/log/mysql
+    state: directory
+    owner: mysql
+    group: adm
+    mode:  0750
+  notify: restart_mysql
+
+- name: Ensure MySQL is started and enabled on boot.
+  systemd:
+    name: "{{mysql_service}}"
+    daemon_reload: yes
+    enabled: yes
+    state: started

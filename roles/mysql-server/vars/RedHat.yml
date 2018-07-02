@@ -1,0 +1,4 @@
+mysql_service: mysqld
+mysql_python_package: MySQL-python
+mysql_config_file:        /etc/my.cnf
+mysql_config_include_dir: /etc/my.cnf.d

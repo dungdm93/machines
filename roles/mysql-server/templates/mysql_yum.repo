@@ -1,0 +1,18 @@
+{#
+  RHEL/Oracle Linux: el
+  Fedora:            fc
+  SLES:              sles
+#}
+[mysql]
+name=MySQL Community Server
+baseurl=http://repo.mysql.com/yum/mysql-{{mysql_version}}-community/el/{{ansible_distribution_major_version}}/{{ansible_architecture}}/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+enabled=1
+gpgcheck=1
+
+[mysql-tools]
+name=MySQL Tools
+baseurl=http://repo.mysql.com/yum/mysql-tools-community/el/{{ansible_distribution_major_version}}/{{ansible_architecture}}/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+enabled=1
+gpgcheck=1

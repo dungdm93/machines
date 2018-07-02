@@ -1,0 +1,2 @@
+deb http://repo.mysql.com/apt/{{ansible_distribution | lower}}/ {{ansible_distribution_release}} mysql-{{mysql_version}}
+deb http://repo.mysql.com/apt/{{ansible_distribution | lower}}/ {{ansible_distribution_release}} mysql-tools

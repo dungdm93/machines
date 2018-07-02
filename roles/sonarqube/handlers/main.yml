@@ -1,0 +1,6 @@
+---
+- name: Restart SonarQube service
+  service:
+    name:  sonarqube
+    state: restarted
+  listen: restart_sonarqube

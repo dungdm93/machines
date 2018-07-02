@@ -1,0 +1,19 @@
+[Unit]
+Description=SonarQube - Continuous Code Quality
+Documentation=https://docs.sonarqube.org/
+Conflicts=sonar.service
+Requires=network.target local-fs.target remote-fs.target
+After=network.target local-fs.target remote-fs.target
+
+[Service]
+Type=forking
+User={{sonarqube_user}}
+Group={{sonarqube_user}}
+WorkingDirectory={{sonarqube_home}}
+ExecStart={{sonarqube_home}}/bin/linux-x86-64/sonar.sh start
+ExecStop={{sonarqube_home}}/bin/linux-x86-64/sonar.sh stop
+ExecReload={{sonarqube_home}}/bin/linux-x86-64/sonar.sh restart
+PIDFile={{sonarqube_home}}/bin/linux-x86-64/SonarQube.pid
+
+[Install]
+WantedBy=multi-user.target

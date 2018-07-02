@@ -1,0 +1,2 @@
+sonarqube_home: /opt/sonarqube
+sonarqube_user: sonar

@@ -1,0 +1,77 @@
+---
+- name: Install OpenJDK 8 Runtime Environment (JRE)
+  package:
+    name:  "{{java_8_jre_package[ansible_os_family]}}"
+    state: present
+
+- name: Create sonar user
+  user:
+    name: "{{sonarqube_user}}"
+    # group: "{{sonarqube_user}}"
+    comment: SonarQube user
+    create_home: no
+    shell:  /usr/sbin/nologin
+    state:  present
+    system: yes
+
+- name: Check SonarQube Home is exist
+  stat:
+    path: "{{sonarqube_home}}"
+  register: sonar_stat
+
+- name: Install SonarQube
+  block:
+  - name: Install zip/unzip packages
+    package:
+      name:  unzip  # tar gzip (gunzip) zip unzip
+      state: present
+
+  - name: Download & extract sonarqube
+    unarchive:
+      src:   "{{sonarqube_download_url}}"
+      dest:  "/tmp"
+      owner: "{{sonarqube_user}}"
+      group: "{{sonarqube_user}}"
+      remote_src: yes
+      list_files: yes
+    register: sonarqube
+
+  - name: Move sonarqube to home
+    command: mv /tmp/{{sonarqube.files[0]}} {{sonarqube_home}}
+  when: not sonar_stat.stat.exists
+
+- name: Config SonarQube
+  lineinfile:
+    path:   "{{sonarqube_home}}/conf/sonar.properties"
+    regexp: "{{item.regex}}"
+    line:   "{{item.replacement}}"
+  with_items:
+  - regex: '^#?sonar\.jdbc\.username='
+    replacement: "sonar.jdbc.username={{sonarqube_database_username | mandatory}}"
+  - regex: '^#?sonar\.jdbc\.password='
+    replacement: "sonar.jdbc.password={{sonarqube_database_password | mandatory}}"
+  - regex: '^#?sonar\.web\.javaOpts='
+    replacement: "sonar.web.javaOpts=-server"
+  notify: restart_sonarqube
+
+- name: Config SonarQube (cont.)
+  lineinfile:
+    path:   "{{sonarqube_home}}/conf/sonar.properties"
+    line:   "sonar.jdbc.url={{sonarqube_database_url | mandatory}}"
+    insertafter: '^#?sonar\.jdbc\.password='
+  notify: restart_sonarqube
+
+- name: Setup SonarQube service
+  block:
+    - name: Copy service file
+      template:
+        src:  templates/sonarqube.service
+        dest: /etc/systemd/system/sonarqube.service
+      notify: restart_sonarqube
+
+    - name: Start systemd service
+      systemd:
+        name: sonarqube
+        daemon_reload: yes
+        enabled: yes
+        state: started

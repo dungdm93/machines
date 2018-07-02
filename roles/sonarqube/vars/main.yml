@@ -1,0 +1,4 @@
+sonarqube_download_url: https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-{{sonarqube_version | mandatory}}.zip
+java_8_jre_package:
+  Debian: openjdk-8-jre
+  RedHat: java-1.8.0-openjdk

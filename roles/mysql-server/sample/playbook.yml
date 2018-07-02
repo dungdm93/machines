@@ -1,0 +1,7 @@
+---
+- hosts: mysql-server
+  become: yes
+  roles:
+  - role: mysql-server
+    vars:
+      mysql_root_password: foobar

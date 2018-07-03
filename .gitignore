@@ -254,3 +254,5 @@ GitHub.sublime-settings
 
 ### Custom ignore
 !.gitkeep
+/inventory.ini
+/playbook.yml

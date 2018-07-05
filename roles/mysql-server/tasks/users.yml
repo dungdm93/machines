@@ -1,9 +1,4 @@
 ---
-- name: Install MySQL-python package
-  package:
-    name:  "{{mysql_python_package}}"
-    state: present
-
 # Setup MySQL root password
 #
 # On Debian and RedHat with MySQL <= 5.6, login via:
@@ -29,13 +24,35 @@
   - set_fact:
       mysql_old_password: "{{ temporary_password.stdout }}"
 
-# TODO: error
+- name: Install MySQL-python package
+  package:
+    name:  "{{mysql_python_package}}"
+    state: present
+
+# BUG: python3, socket, mysql_native_password
 - name: Change MySQL root password
   mysql_user:
-    name: root
+    name:     "root"
     password: "{{ mysql_root_password }}"
+
     login_user:     "root"
     login_password: "{{ mysql_old_password | default() }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
     check_implicit_admin: true
   when: (mysql_new_installation is changed) or (mysql_old_password is defined)
+
+- name: Config other MySQL users
+  mysql_user:
+    name:           "{{ item.username }}"
+    password:       "{{ item.password }}"
+    state:          "{{ item.state | default(omit) }}"
+    host:           "{{ item.hostname | default(omit) }}"
+    host_all:       "{{ item.host_all | default(omit) }}"
+    priv:           "{{ item.privileges | default(omit) }}"
+    append_privs:   "{{ item.append_privs | default(omit) }}"
+
+    login_user:     "root"
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  loop: "{{ mysql_users }}"
+  when: mysql_users is defined

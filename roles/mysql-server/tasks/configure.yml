@@ -51,3 +51,6 @@
     daemon_reload: yes
     enabled: yes
     state: started
+
+- name: Run all notified handlers
+  meta: flush_handlers

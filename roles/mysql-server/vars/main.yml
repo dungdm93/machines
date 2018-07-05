@@ -1,0 +1,10 @@
+mysql_config_mysqld_default:
+  pid_file:  /var/run/mysqld/mysqld.pid
+  socket:    /var/run/mysqld/mysqld.sock
+  datadir:   /var/lib/mysql
+  log_error: /var/log/mysql/error.log
+  default_authentication_plugin: mysql_native_password
+
+mysql_config_client_default:
+  port: 3306
+  socket: /var/run/mysqld/mysqld.sock

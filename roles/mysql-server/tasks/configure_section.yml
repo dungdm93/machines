@@ -1,0 +1,10 @@
+- name: "MySQL: configure {{mysql_config.section}}"
+  ini_file:
+    path:    "{{mysql_config_include_dir}}/{{mysql_config.section}}.cnf"
+    section: "{{mysql_config.section}}"
+    create:  yes
+    state:   present
+    option:  "{{ item.key   }}"
+    value:   "{{ item.value }}"
+  notify: restart_mysql
+  loop: "{{ mysql_config.content | dict2items }}"

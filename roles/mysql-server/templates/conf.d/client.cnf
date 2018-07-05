@@ -1,7 +1,0 @@
-# {{ ansible_managed }}
-
-[client]
-# user      = root
-# password  = {{ mysql_root_password }}
-port        = 3306
-socket      = /var/run/mysqld/mysqld.sock

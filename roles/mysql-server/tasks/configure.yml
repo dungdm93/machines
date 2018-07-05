@@ -8,6 +8,11 @@
 # > SHOW [GLOBAL | SESSION] VARIABLES
 #        [LIKE 'pattern' | WHERE expr]
 ---
+- name: Apply default configs
+  set_fact:
+    mysql_config_mysqld: "{{ mysql_config_mysqld_default | combine(mysql_config_mysqld) }}"
+    mysql_config_client: "{{ mysql_config_client_default | combine(mysql_config_client) }}"
+
 - name: Remove old configs
   file:
     path:   "{{item}}"
@@ -17,10 +22,21 @@
     - "{{mysql_config_file}}"
     - "{{mysql_config_include_dir}}"
 
-- name: Verify mysql include directory exists.
+- name: Ensure MySQL directories exists.
   file:
-    path: "{{ mysql_config_include_dir }}"
-    state: directory
+    path:   "{{ item.path }}"
+    state:   directory
+    recurse: yes
+    owner:  "{{ item.owner | default(omit) }}"
+    group:  "{{ item.group | default(omit) }}"
+    mode:   "{{ item.mode  | default(omit) }}"
+  notify: restart_mysql
+  loop:
+  - path:  "{{ mysql_config_include_dir }}"
+  - path:  "/var/log/mysql"
+    owner: "mysql"
+    group: "adm"
+    mode:  "0750"
 
 - name: Copy my.cnf global MySQL configuration.
   template:
@@ -28,22 +44,17 @@
     dest: "{{ mysql_config_file }}"
   notify: restart_mysql
 
-- name: Copy my.cnf override files into include directory.
-  template:
-    src:  "{{ item }}"
-    dest: "{{ mysql_config_include_dir }}"
-  with_fileglob:
-  - templates/conf.d/*
-  notify: restart_mysql
-
-- name: Ensure MySQL log directory exists.
-  file:
-    path:  /var/log/mysql
-    state: directory
-    owner: mysql
-    group: adm
-    mode:  0750
-  notify: restart_mysql
+# TODO: use looping over blocks
+# https://github.com/ansible/ansible/issues/13262
+- name: MySQL configuration
+  include_tasks: configure_section.yml
+  loop_control:
+    loop_var: mysql_config
+  loop:
+  - section: "mysqld"
+    content: "{{mysql_config_mysqld}}"
+  - section: "client"
+    content: "{{mysql_config_client}}"
 
 - name: Ensure MySQL is started and enabled on boot.
   systemd:

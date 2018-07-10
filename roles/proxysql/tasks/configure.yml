@@ -1,0 +1,6 @@
+---
+- name: Ensure ProxySQL service is started and enabled on boot.
+  service:
+    name: proxysql
+    state: started
+    enabled: yes

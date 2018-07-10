@@ -1,0 +1,17 @@
+---
+- name: Add ProxySQL GPG Public key
+  apt_key:
+    url:   http://repo.proxysql.com/ProxySQL/repo_pub_key
+    state: present
+
+- name: Add APT repos
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/{{ansible_distribution_release}}/ ./
+    state: present
+    filename: proxysql
+
+- name: Install ProxySQL package
+  apt:
+    name:  proxysql
+    state: present
+    update_cache: yes

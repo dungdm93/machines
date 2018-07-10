@@ -1,0 +1,21 @@
+---
+- name: Add ProxySQL GPG Public key
+  rpm_key:
+    key:   http://repo.proxysql.com/ProxySQL/repo_pub_key
+    state: present
+
+- name: Add APT repos
+  yum_repository:
+    name: proxysql
+    description: ProxySQL YUM repository
+    baseurl: http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/centos/$releasever
+    gpgkey: http://repo.proxysql.com/ProxySQL/repo_pub_key
+    gpgcheck: yes
+    state: present
+    file: proxysql
+
+- name: Install ProxySQL package
+  yum:
+    name:  proxysql
+    state: present
+    update_cache: yes

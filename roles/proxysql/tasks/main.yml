@@ -1,0 +1,3 @@
+---
+- name: Install ProxySQL
+  include_tasks: "install_{{ ansible_os_family }}.yml"

@@ -1,4 +1,4 @@
 mysql_service: mysql
-mysql_python_package: "{{ 'python-mysqldb' if ansible_python_version is version(2, '=') else 'python3-mysqldb' }}"
+mysql_python_package: "{{ 'python-mysqldb' if ansible_python_version.startswith('2.') else 'python3-mysqldb' }}"
 mysql_config_file:        /etc/mysql/my.cnf
 mysql_config_include_dir: /etc/mysql/conf.d

@@ -56,7 +56,7 @@
   - section: "client"
     content: "{{mysql_config_client}}"
 
-- name: Ensure MySQL is started and enabled on boot.
+- name: Ensure MySQL is running and enabled on boot
   systemd:
     name: "{{mysql_service}}"
     daemon_reload: yes

@@ -1,0 +1,5 @@
+rabbitmq_package: rabbitmq-server
+rabbitmq_service: rabbitmq-server
+
+# https://www.rabbitmq.com/configure.html#configuration-files
+rabbitmq_config_dir: /etc/rabbitmq

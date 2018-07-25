@@ -1,0 +1,29 @@
+# https://www.rabbitmq.com/install-rpm.html
+---
+- name: Enable RabbitMQ Package Repository on Bintray
+  block:
+  - name: Add RabbitMQ rpm key
+    rpm_key:
+      key:   https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+      state: present
+
+  - name: Add RabbitMQ yum repo
+    yum_repository:
+      name: "{{item.name}}"
+      description: RabbitMQ YUM repository
+      baseurl: https://dl.bintray.com/rabbitmq/rpm/{{item.component}}/el/$releasever/
+      gpgkey:  https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+      gpgcheck: yes
+      state: present
+      file:  rabbitmq
+    loop:
+    - name: rabbitmq-server
+      component: erlang/21
+    - name: rabbitmq-erlang
+      component: rabbitmq-server/v3.7.x
+
+- name: Install RabbitMQ server
+  yum:
+    name: "{{ rabbitmq_package }}"
+    state: present
+    update_cache: true

@@ -1,8 +1,9 @@
 ---
 - name: Add ProxySQL GPG Public key
   apt_key:
-    url:   http://repo.proxysql.com/ProxySQL/repo_pub_key
-    state: present
+    url:     http://repo.proxysql.com/ProxySQL/repo_pub_key
+    keyring: /etc/apt/trusted.gpg.d/proxysql.gpg
+    state:   present
 
 - name: Add APT repos
   apt_repository:

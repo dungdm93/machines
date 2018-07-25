@@ -1,0 +1,32 @@
+# https://www.rabbitmq.com/install-debian.html
+---
+- name: Install missing packages
+  apt:
+    name:
+    - apt-transport-https
+    update_cache: yes
+
+- name: Enable RabbitMQ Package Repository on Bintray
+  block:
+  - name: Add RabbitMQ apt key
+    apt_key:
+      url:     https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+      keyring: /etc/apt/trusted.gpg.d/rabbitmq.gpg
+      state:   present
+
+  - name: Add RabbitMQ apt repo
+    apt_repository:
+      repo:  deb https://dl.bintray.com/rabbitmq/debian {{ansible_distribution_release}} {{component}}
+      state: present
+      filename: rabbitmq
+    loop:
+    - erlang
+    - main
+    loop_control:
+      loop_var: component
+
+- name: Install RabbitMQ server
+  apt:
+    name: "{{ rabbitmq_package }}"
+    state: present
+    update_cache: true

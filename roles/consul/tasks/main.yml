@@ -28,7 +28,7 @@
 
 - name: Configs consul agent
   copy:
-    content: "{{ consul_configs | to_nice_json }}" #TODO indent=2
+    content: "{{consul_configs | to_nice_json}}" #TODO indent=2
     dest:    /etc/consul.d/server.json
     force:   yes
 

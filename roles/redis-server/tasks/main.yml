@@ -1,14 +1,14 @@
 ---
 - name: Include OS-specific variables
-  include_vars: "{{ ansible_os_family }}.yml"
+  include_vars: "{{ansible_os_family}}.yml"
 
 # TODO: Debian, CentOS, Ubuntu 16.04 missing Redis 4 on main repo,
 # Only Ubuntu has PPA for this.
 - name: Install Redis server
-  include_tasks: "install_{{ ansible_os_family }}.yml"
+  include_tasks: "install_{{ansible_os_family}}.yml"
 
 - name: Ensure Redis is running and enabled on boot
   service: 
-    name: "{{ redis_service }}"
+    name: "{{redis_service}}"
     state: started
     enabled: yes

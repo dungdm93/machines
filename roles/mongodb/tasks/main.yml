@@ -13,7 +13,7 @@
 - name: Install MongoDB
   apt:
     update_cache: yes
-    name: "{{ item }}"
+    name: "{{item}}"
     state: present
   with_items:
   - mongodb-org

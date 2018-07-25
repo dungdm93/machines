@@ -10,8 +10,8 @@
 ---
 - name: Apply default configs
   set_fact:
-    mysql_config_mysqld: "{{ mysql_config_mysqld_default | combine(mysql_config_mysqld) }}"
-    mysql_config_client: "{{ mysql_config_client_default | combine(mysql_config_client) }}"
+    mysql_config_mysqld: "{{mysql_config_mysqld_default | combine(mysql_config_mysqld)}}"
+    mysql_config_client: "{{mysql_config_client_default | combine(mysql_config_client)}}"
 
 - name: Remove old configs
   file:
@@ -24,15 +24,15 @@
 
 - name: Ensure MySQL directories exists.
   file:
-    path:   "{{ item.path }}"
+    path:   "{{item.path}}"
     state:   directory
     recurse: yes
-    owner:  "{{ item.owner | default(omit) }}"
-    group:  "{{ item.group | default(omit) }}"
-    mode:   "{{ item.mode  | default(omit) }}"
+    owner:  "{{item.owner | default(omit)}}"
+    group:  "{{item.group | default(omit)}}"
+    mode:   "{{item.mode  | default(omit)}}"
   notify: restart_mysql
   loop:
-  - path:  "{{ mysql_config_include_dir }}"
+  - path:  "{{mysql_config_include_dir}}"
   - path:  "/var/log/mysql"
     owner: "mysql"
     group: "adm"
@@ -41,7 +41,7 @@
 - name: Copy my.cnf global MySQL configuration.
   template:
     src:  my.cnf
-    dest: "{{ mysql_config_file }}"
+    dest: "{{mysql_config_file}}"
   notify: restart_mysql
 
 # TODO: use looping over blocks

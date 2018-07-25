@@ -1,6 +1,6 @@
 ---
 - name: Install RabbitMQ server
-  include_tasks: "install_{{ ansible_os_family }}.yml"
+  include_tasks: "install_{{ansible_os_family}}.yml"
 
 - name: Config RabbitMQ daemon
   include_tasks: configure.yml
@@ -10,13 +10,13 @@
     names: "{{plugin.name}}"
     state: "{{plugin.status | default('enabled')}}"
   when: rabbitmq_plugins is defined
-  loop: "{{ rabbitmq_plugins }}"
+  loop: "{{rabbitmq_plugins}}"
   loop_control:
     loop_var: plugin
 
 - name: Ensure RabbitMQ is running and enabled on boot
   service: 
-    name: "{{ rabbitmq_service }}"
+    name: "{{rabbitmq_service}}"
     state: started
     enabled: yes
 
@@ -27,5 +27,5 @@
     state:       "{{item.state | default(omit)}}"
     tags:        "{{item.tags  | default(omit)}}"
     permissions: "{{item.permissions | default(omit)}}"
-  loop: "{{ rabbitmq_users }}"
+  loop: "{{rabbitmq_users}}"
   when: rabbitmq_users is defined

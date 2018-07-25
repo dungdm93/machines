@@ -11,6 +11,6 @@
 
 - name: Install Redis server
   apt:
-    name: "{{ redis_package }}"
+    name: "{{redis_package}}"
     state: present
     update_cache: true

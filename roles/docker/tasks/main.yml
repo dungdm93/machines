@@ -6,7 +6,7 @@
 
 - name: Add users to 'docker' group
   user:
-    user:   "{{ item }}"
+    user:   "{{item}}"
     groups: "docker"
     append: yes
-  with_items: "{{ docker_users | default(ansible_user) }}"
+  with_items: "{{docker_users | default(ansible_user)}}"

@@ -27,6 +27,6 @@
 
 - name: Install RabbitMQ server
   apt:
-    name: "{{ rabbitmq_package }}"
+    name: "{{rabbitmq_package}}"
     state: present
     update_cache: true

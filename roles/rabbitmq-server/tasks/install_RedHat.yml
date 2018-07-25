@@ -24,6 +24,6 @@
 
 - name: Install RabbitMQ server
   yum:
-    name: "{{ rabbitmq_package }}"
+    name: "{{rabbitmq_package}}"
     state: present
     update_cache: true

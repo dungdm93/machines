@@ -4,7 +4,7 @@
     section: "{{mysql_config.section}}"
     create:  yes
     state:   present
-    option:  "{{ item.key   }}"
-    value:   "{{ item.value }}"
+    option:  "{{item.key  }}"
+    value:   "{{item.value}}"
   notify: restart_mysql
-  loop: "{{ mysql_config.content | dict2items }}"
+  loop: "{{mysql_config.content | dict2items}}"

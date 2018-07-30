@@ -20,6 +20,7 @@
     state: started
     enabled: yes
 
+# NOTE: tags = administrator for admin user
 - name: Config RabbitMQ users
   rabbitmq_user:
     username:    "{{item.username}}"

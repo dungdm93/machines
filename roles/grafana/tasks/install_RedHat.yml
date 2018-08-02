@@ -1,3 +1,4 @@
+# Docs: http://docs.grafana.org/installation/rpm/
 ---
 - name: Install missing packages
   yum:
@@ -10,7 +11,7 @@
 
 - name: Add Grafana GPG public key
   rpm_key:
-    url:     https://packagecloud.io/grafana/stable/gpgkey
+    key:     https://packagecloud.io/grafana/stable/gpgkey
     state:   present
 
 - name: Add Grafana yum repo
@@ -18,7 +19,7 @@
     name: grafana
     description: Grafana stable repository
     baseurl: https://packagecloud.io/grafana/stable/el/$releasever/$basearch
-    gpgkey:  https://packagecloud.io/grafana/stable/gpgkey
+    gpgkey:  https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
     gpgcheck: yes
     state: present
     file:  grafana

@@ -19,6 +19,7 @@
     name: grafana
     description: Grafana stable repository
     baseurl: https://packagecloud.io/grafana/stable/el/$releasever/$basearch
+    # HACK: rpm package is NOT using packagecloud GPG key
     gpgkey:  https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
     gpgcheck: yes
     state: present

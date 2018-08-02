@@ -7,7 +7,6 @@
   vars:
     packages:
     - apt-transport-https
-    - "{{'debian-archive-keyring' if (ansible_distribution | lower) == 'debian' else omit}}"
 
 - name: Add Grafana GPG public key
   apt_key:
@@ -15,11 +14,20 @@
     keyring: /etc/apt/trusted.gpg.d/grafana.gpg
     state:   present
 
-- name: Add Grafana apt repo
+- name: Add Grafana apt repo (debian)
   apt_repository:
     repo:  deb https://packagecloud.io/grafana/stable/{{ansible_distribution | lower}}/ {{ansible_distribution_release}} main
     state: present
     filename: grafana
+  when: ansible_distribution == 'Debian'
+
+# HACK: all ubuntu versions are using debian/stretch
+- name: Add Grafana apt repo (ubuntu)
+  apt_repository:
+    repo:  deb https://packagecloud.io/grafana/stable/debian/ stretch main
+    state: present
+    filename: grafana
+  when: ansible_distribution == 'Ubuntu'
 
 - name: Install Grafana package
   apt:

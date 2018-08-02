@@ -1,0 +1,28 @@
+---
+- name: Install missing packages
+  apt:
+    name:  "{{packages}}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - apt-transport-https
+    - "{{'debian-archive-keyring' if (ansible_distribution | lower) == 'debian' else omit}}"
+
+- name: Add Grafana GPG public key
+  apt_key:
+    url:     https://packagecloud.io/grafana/stable/gpgkey
+    keyring: /etc/apt/trusted.gpg.d/grafana.gpg
+    state:   present
+
+- name: Add Grafana apt repo
+  apt_repository:
+    repo:  deb https://packagecloud.io/grafana/stable/{{ansible_distribution | lower}}/ {{ansible_distribution_release}} main
+    state: present
+    filename: grafana
+
+- name: Install Grafana package
+  apt:
+    name:  grafana
+    state: present
+    update_cache: yes

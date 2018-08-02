@@ -1,0 +1,6 @@
+---
+- name: Install Grafana server
+  include_tasks: "install_{{ansible_os_family}}.yml"
+
+- name: Config Grafana daemon
+  include_tasks: configure.yml

@@ -1,0 +1,30 @@
+---
+- name: Install missing packages
+  yum:
+    name:  "{{packages}}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - yum-utils
+
+- name: Add Grafana GPG public key
+  rpm_key:
+    url:     https://packagecloud.io/grafana/stable/gpgkey
+    state:   present
+
+- name: Add Grafana yum repo
+  yum_repository:
+    name: grafana
+    description: Grafana stable repository
+    baseurl: https://packagecloud.io/grafana/stable/el/$releasever/$basearch
+    gpgkey:  https://packagecloud.io/grafana/stable/gpgkey
+    gpgcheck: yes
+    state: present
+    file:  grafana
+
+- name: Install Grafana package
+  yum:
+    name:  grafana
+    state: present
+    update_cache: yes

@@ -1,0 +1,6 @@
+---
+- name: Install Prometheus server
+  include_tasks: install.yml
+
+- name: Config Prometheus daemon
+  include_tasks: configure.yml

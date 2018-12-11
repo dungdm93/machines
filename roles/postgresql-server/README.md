@@ -1,0 +1,2 @@
+Ansible `PostgreSQL server` role
+================================

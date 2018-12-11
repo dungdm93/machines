@@ -1,0 +1,3 @@
+postgresql_service: postgresql
+pg_ver:  "{{postgresql_version | replace('.', '')}}"
+pg_data: "/var/lib/pgsql/{{postgresql_version}}/data"

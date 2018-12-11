@@ -1,0 +1,30 @@
+# Documentations:
+# http://apt.postgresql.org
+# https://postgresql.org/download
+# https://wiki.postgresql.org/wiki/Apt
+---
+- name: Install missing packages
+  apt:
+    name: "{{packages}}"
+  vars:
+    packages:
+    - dirmngr
+    - apt-transport-https
+
+- name: Add PostgreSQL GPG Public key
+  apt_key:
+    url:   https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: Add PostgreSQL APT repository
+  apt_repository:
+    repo:  deb https://download.postgresql.org/pub/repos/apt/ {{ansible_distribution_release}}-pgdg main
+    state: present
+    filename: pgdg
+
+- name: Install PostgreSQL-server package
+  apt:
+    name:  postgresql
+    state: present
+    update_cache: yes
+  notify: restart_postgresql

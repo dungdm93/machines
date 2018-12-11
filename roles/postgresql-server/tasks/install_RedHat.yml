@@ -1,0 +1,32 @@
+# Documentations:
+# https://yum.postgresql.org
+# https://postgresql.org/download
+# https://wiki.postgresql.org/wiki/YUM_Installation
+---
+- name: Download PostgreSQL GPG Public key
+  get_url:
+    url:  https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+    mode: 600
+
+- name: Add PostgreSQL Yum repository
+  yum_repository:
+    name: pgdg
+    description: PostgreSQL {{postgresql_version}} $releasever - $basearch
+    baseurl:  https://download.postgresql.org/pub/repos/yum/{{postgresql_version}}/redhat/rhel-$releasever-$basearch
+    enabled:  yes
+    gpgcheck: yes
+    gpgkey:   file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+    file: pgdg
+
+- name: Install PostgreSQL-server package
+  yum:
+    name:  postgresql{{pg_ver}}-server
+    state: present
+    update_cache: yes
+  notify: restart_postgresql
+
+- name: postgresql initdb
+  command: /usr/pgsql-{{postgresql_version}}/bin/postgresql-{{pg_ver}}-setup initdb
+  args:
+    creates: "{{pg_data}}"
